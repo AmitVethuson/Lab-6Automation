@@ -1,0 +1,66 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "aksclustername": {
+            "type": "string",
+            "metadata": {
+                "description": "Aks Cluster Name"
+            },
+            "minLength":3,
+            "maxLength":30
+        },
+        "akslocation": {
+            "type": "string",
+            "metadata": {
+                "description": "location of the akscluster"
+            },
+            "minLength": 2,
+            "maxLength":20
+        }
+
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [{
+        "name": "[parameters('aksclustername')]",
+        "type": "Microsoft.ContainerService/managedClusters",
+        "apiVersion": "2023-01-01",
+        "location": "[parameters('akslocation')]",
+        "properties": {
+            "kubernetesVersion": "1.15.7",
+            "dnsPrefix": "dnsprefix",
+            "agentPoolProfiles": [
+                {
+                    "name": "agentpool1",
+                    "count": 2,
+                    "vmSize": "Standard_A1",
+                    "osType": "Linux",
+                    "storageProfile": "ManagedDisks"
+                },
+                {
+                    "name": "agentpool2",
+                    "count": 2,
+                    "vmSize": "Standard_A1",
+                    "osType": "Linux",
+                    "storageProfile": "ManagedDisks"
+                }               
+            ],
+            "linuxProfile": {
+                "adminUsername": "adminUserName",
+                "ssh": {
+                    "publicKeys": [
+                        {
+                            "keyData": "keyData"
+                        }
+                    ]
+                }
+            },
+            "servicePrincipalProfile": {
+                "clientId": "servicePrincipalAppId",
+                "secret": "servicePrincipalAppPassword"
+            }
+        }
+    }],
+    "outputs": {}
+}
